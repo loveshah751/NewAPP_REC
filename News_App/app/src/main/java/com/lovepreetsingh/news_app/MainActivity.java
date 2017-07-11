@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +44,11 @@ public class MainActivity extends AppCompatActivity {
         pb = (ProgressBar) findViewById(R.id.progressbar);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
+        NewsApiTask newsApiTask = new NewsApiTask();
+
+        newsApiTask.execute();
+
+
 
     }
 
@@ -59,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected ArrayList<newsItem> doInBackground(String... params) {
 
+            Log.e("background","background");
             URL searchUrl = NetworkUtils.buildUrl();
             ArrayList<newsItem> result = null;
 
@@ -71,9 +78,11 @@ public class MainActivity extends AppCompatActivity {
                 result = openNewsJsonUtil.openNewsJsonUtil(NewsApiSearchResults);
 
             } catch (IOException e) {
+                Log.e("data","beforata",e);
                 e.printStackTrace();
                 return null;
             } catch (JSONException e) {
+                Log.e("dat","before data",e);
                 e.printStackTrace();
             }
 
@@ -85,7 +94,9 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(final ArrayList<newsItem> data) {
             pb.setVisibility(View.INVISIBLE);
             errorTextView.setVisibility(View.INVISIBLE);
+            Log.e("data","before data");
             if (data != null) {
+                Log.e("data","data");
                 Adapter adapter = new Adapter(data, new Adapter.ItemClickListener() {
                     @Override
                     public void onItemClick(int clickedItemIndex) {
